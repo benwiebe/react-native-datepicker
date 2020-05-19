@@ -170,7 +170,7 @@ class DatePicker extends Component {
   getTitleElement() {
     const {date, placeholder, customStyles, allowFontScaling} = this.props;
 
-    if (!date && placeholder) {
+    if (!date && placeholder !== undefined) {
       return (
         <Text allowFontScaling={allowFontScaling} style={[Style.placeholderText, customStyles.placeholderText]}>
           {placeholder}
