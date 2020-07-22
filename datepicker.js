@@ -324,12 +324,10 @@ class DatePicker extends Component {
     return null;
   }
 
-  render() {
+  _renderIOSModal() {
     const {
       mode,
-      style,
       customStyles,
-      disabled,
       minDate,
       maxDate,
       minuteInterval,
@@ -337,11 +335,114 @@ class DatePicker extends Component {
       cancelBtnText,
       confirmBtnText,
       TouchableComponent,
-      testID,
       cancelBtnTestID,
       confirmBtnTestID,
       allowFontScaling,
       locale
+    } = this.props;
+
+    return (
+      <Modal
+        transparent={true}
+        animationType="none"
+        visible={this.state.modalVisible}
+        supportedOrientations={SUPPORTED_ORIENTATIONS}
+        onRequestClose={() => {this.setModalVisible(false);}}
+      >
+        <View
+          style={{flex: 1}}
+        >
+          <TouchableComponent
+            style={Style.datePickerMask}
+            activeOpacity={1}
+            underlayColor={'#00000077'}
+            onPress={this.onPressMask}
+          >
+            <TouchableComponent
+              underlayColor={'#fff'}
+              style={{flex: 1}}
+            >
+              <Animated.View
+                style={[Style.datePickerCon, {height: this.state.animatedHeight}, customStyles.datePickerCon]}
+              >
+                <View pointerEvents={this.state.allowPointerEvents ? 'auto' : 'none'}>
+                  <DatePickerIOS
+                    date={this.state.date}
+                    mode={mode}
+                    minimumDate={minDate && this.getDate(minDate)}
+                    maximumDate={maxDate && this.getDate(maxDate)}
+                    onDateChange={this.onDateChange}
+                    minuteInterval={minuteInterval}
+                    timeZoneOffsetInMinutes={timeZoneOffsetInMinutes ? timeZoneOffsetInMinutes : null}
+                    style={[Style.datePicker, customStyles.datePicker]}
+                    locale={locale}
+                  />
+                </View>
+                <TouchableComponent
+                  underlayColor={'transparent'}
+                  onPress={this.onPressCancel}
+                  style={[Style.btnText, Style.btnCancel, customStyles.btnCancel]}
+                  testID={cancelBtnTestID}
+                >
+                  <Text
+                    allowFontScaling={allowFontScaling}
+                    style={[Style.btnTextText, Style.btnTextCancel, customStyles.btnTextCancel]}
+                  >
+                    {cancelBtnText}
+                  </Text>
+                </TouchableComponent>
+                <TouchableComponent
+                  underlayColor={'transparent'}
+                  onPress={this.onPressConfirm}
+                  style={[Style.btnText, Style.btnConfirm, customStyles.btnConfirm]}
+                  testID={confirmBtnTestID}
+                >
+                  <Text allowFontScaling={allowFontScaling}
+                        style={[Style.btnTextText, customStyles.btnTextConfirm]}
+                  >
+                    {confirmBtnText}
+                  </Text>
+                </TouchableComponent>
+              </Animated.View>
+            </TouchableComponent>
+          </TouchableComponent>
+        </View>
+      </Modal>
+    );
+  }
+
+  _renderIOSInline() {
+    const {
+      mode,
+      customStyles,
+      minDate,
+      maxDate,
+      minuteInterval,
+      timeZoneOffsetInMinutes,
+      locale
+    } = this.props;
+    return (
+      <DatePickerIOS
+        date={this.state.date}
+        mode={mode}
+        minimumDate={minDate && this.getDate(minDate)}
+        maximumDate={maxDate && this.getDate(maxDate)}
+        onDateChange={this.onDateChange}
+        minuteInterval={minuteInterval}
+        timeZoneOffsetInMinutes={timeZoneOffsetInMinutes ? timeZoneOffsetInMinutes : null}
+        style={[Style.datePicker, customStyles.datePicker]}
+        locale={locale}
+      />
+    );
+  }
+
+  render() {
+    const {
+      style,
+      customStyles,
+      disabled,
+      TouchableComponent,
+      testID
     } = this.props;
 
     const dateInputStyle = [
@@ -349,6 +450,9 @@ class DatePicker extends Component {
       disabled && Style.disabled,
       disabled && customStyles.disabled
     ];
+
+    const platformVersion = Number.parseFloat(Platform.Version);
+    const useInline = Platform.OS === 'ios' && platformVersion >= 14;
 
     return (
       <TouchableComponent
@@ -358,81 +462,18 @@ class DatePicker extends Component {
         testID={testID}
       >
         <View style={[Style.dateTouchBody, customStyles.dateTouchBody]}>
+          {Platform.OS === 'ios' && useInline && this._renderIOSInline()}
           {
-            !this.props.hideText ?
+            !this.props.hideText &&
+            !useInline ?
               <View style={dateInputStyle}>
                 {this.getTitleElement()}
               </View>
-            :
+              :
               <View/>
           }
           {this._renderIcon()}
-          {Platform.OS === 'ios' && <Modal
-            transparent={true}
-            animationType="none"
-            visible={this.state.modalVisible}
-            supportedOrientations={SUPPORTED_ORIENTATIONS}
-            onRequestClose={() => {this.setModalVisible(false);}}
-          >
-            <View
-              style={{flex: 1}}
-            >
-              <TouchableComponent
-                style={Style.datePickerMask}
-                activeOpacity={1}
-                underlayColor={'#00000077'}
-                onPress={this.onPressMask}
-              >
-                <TouchableComponent
-                  underlayColor={'#fff'}
-                  style={{flex: 1}}
-                >
-                  <Animated.View
-                    style={[Style.datePickerCon, {height: this.state.animatedHeight}, customStyles.datePickerCon]}
-                  >
-                    <View pointerEvents={this.state.allowPointerEvents ? 'auto' : 'none'}>
-                      <DatePickerIOS
-                        date={this.state.date}
-                        mode={mode}
-                        minimumDate={minDate && this.getDate(minDate)}
-                        maximumDate={maxDate && this.getDate(maxDate)}
-                        onDateChange={this.onDateChange}
-                        minuteInterval={minuteInterval}
-                        timeZoneOffsetInMinutes={timeZoneOffsetInMinutes ? timeZoneOffsetInMinutes : null}
-                        style={[Style.datePicker, customStyles.datePicker]}
-                        locale={locale}
-                      />
-                    </View>
-                    <TouchableComponent
-                      underlayColor={'transparent'}
-                      onPress={this.onPressCancel}
-                      style={[Style.btnText, Style.btnCancel, customStyles.btnCancel]}
-                      testID={cancelBtnTestID}
-                    >
-                      <Text
-                        allowFontScaling={allowFontScaling}
-                        style={[Style.btnTextText, Style.btnTextCancel, customStyles.btnTextCancel]}
-                      >
-                        {cancelBtnText}
-                      </Text>
-                    </TouchableComponent>
-                    <TouchableComponent
-                      underlayColor={'transparent'}
-                      onPress={this.onPressConfirm}
-                      style={[Style.btnText, Style.btnConfirm, customStyles.btnConfirm]}
-                      testID={confirmBtnTestID}
-                    >
-                      <Text allowFontScaling={allowFontScaling}
-                            style={[Style.btnTextText, customStyles.btnTextConfirm]}
-                      >
-                        {confirmBtnText}
-                      </Text>
-                    </TouchableComponent>
-                  </Animated.View>
-                </TouchableComponent>
-              </TouchableComponent>
-            </View>
-          </Modal>}
+          {Platform.OS === 'ios' && !useInline && this._renderIOSModal()}
         </View>
       </TouchableComponent>
     );
