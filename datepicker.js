@@ -374,7 +374,7 @@ class DatePicker extends Component {
                     onChange={this.onDateChange}
                     minuteInterval={minuteInterval}
                     timeZoneOffsetInMinutes={timeZoneOffsetInMinutes ? timeZoneOffsetInMinutes : null}
-                    style={[Style.datePicker, customStyles.datePicker]}
+                    style={[Style.modalDatePicker, customStyles.modalDatePicker]}
                     locale={locale}
                   />
                 </View>
@@ -422,17 +422,19 @@ class DatePicker extends Component {
       locale
     } = this.props;
     return (
-      <RNDateTimePicker
-        value={this.state.date}
-        mode={mode}
-        minimumDate={minDate && this.getDate(minDate)}
-        maximumDate={maxDate && this.getDate(maxDate)}
-        onChange={this.onDateChange}
-        minuteInterval={minuteInterval}
-        timeZoneOffsetInMinutes={timeZoneOffsetInMinutes ? timeZoneOffsetInMinutes : null}
-        style={[Style.datePicker, customStyles.datePicker]}
-        locale={locale}
-      />
+      <View pointerEvents={this.state.allowPointerEvents ? 'auto' : 'none'} style={{flex: 1}}>
+        <RNDateTimePicker
+          value={this.state.date}
+          mode={mode}
+          minimumDate={minDate && this.getDate(minDate)}
+          maximumDate={maxDate && this.getDate(maxDate)}
+          onChange={this.onDateChange}
+          minuteInterval={minuteInterval}
+          timeZoneOffsetInMinutes={timeZoneOffsetInMinutes ? timeZoneOffsetInMinutes : null}
+          style={[Style.inlineDatePicker, customStyles.inlineDatePicker]}
+          locale={locale}
+        />
+      </View>
     );
   }
 
@@ -471,7 +473,7 @@ class DatePicker extends Component {
               :
               <View/>
           }
-          {this._renderIcon()}
+          {!useInline && this._renderIcon()}
           {Platform.OS === 'ios' && !useInline && this._renderIOSModal()}
         </View>
       </TouchableComponent>

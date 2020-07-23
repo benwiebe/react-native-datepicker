@@ -63,10 +63,16 @@ let style = StyleSheet.create({
   btnConfirm: {
     right: 0
   },
-  datePicker: {
+  modalDatePicker: {
     marginTop: 42,
     borderTopColor: '#ccc',
     borderTopWidth: 1
+  },
+  inlineDatePicker: {
+    marginTop: 0,
+    borderTopColor: '#ccc',
+    borderTopWidth: 1,
+    height: '100%'
   },
   disabled: {
     backgroundColor: '#eee'
