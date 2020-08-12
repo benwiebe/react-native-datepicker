@@ -30,7 +30,7 @@
     "react-native": "^0.63.0"
   },
   "peerDependencies": {
-    "@react-native-community/datetimepicker": "^2.6.0"
+    "@react-native-community/datetimepicker": "^2.6.1"
   },
   "devDependencies": {
     "babel-core": "^6.5.2",
