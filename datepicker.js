@@ -162,6 +162,7 @@ class DatePicker extends Component {
   }
 
   datePicked() {
+    console.log('datepicked');
     if (typeof this.props.onDateChange === 'function') {
       this.props.onDateChange(this.getDateStr(this.state.date), this.state.date);
     }
@@ -195,6 +196,7 @@ class DatePicker extends Component {
       });
       clearTimeout(timeoutId);
     }, 200);
+    this.datePicked();
   }
 
   onDatePicked({action, year, month, day}) {
@@ -376,6 +378,7 @@ class DatePicker extends Component {
                     timeZoneOffsetInMinutes={timeZoneOffsetInMinutes ? timeZoneOffsetInMinutes : null}
                     style={[Style.modalDatePicker, customStyles.modalDatePicker]}
                     locale={locale}
+                    display={'spinner'}
                   />
                 </View>
                 <TouchableComponent
@@ -433,6 +436,7 @@ class DatePicker extends Component {
           timeZoneOffsetInMinutes={timeZoneOffsetInMinutes ? timeZoneOffsetInMinutes : null}
           style={[Style.inlineDatePicker, customStyles.inlineDatePicker]}
           locale={locale}
+          display={'compact'}
         />
       </View>
     );
