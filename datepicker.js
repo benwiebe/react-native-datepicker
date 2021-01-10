@@ -56,6 +56,12 @@ class DatePicker extends Component {
     }
   }
 
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (this.state.date !== prevState.date) {
+      this.datePicked();
+    }
+  }
+
   setModalVisible(visible) {
     const {height, duration} = this.props;
 
@@ -162,7 +168,6 @@ class DatePicker extends Component {
   }
 
   datePicked() {
-    console.log('datepicked');
     if (typeof this.props.onDateChange === 'function') {
       this.props.onDateChange(this.getDateStr(this.state.date), this.state.date);
     }
@@ -196,7 +201,6 @@ class DatePicker extends Component {
       });
       clearTimeout(timeoutId);
     }, 200);
-    this.datePicked();
   }
 
   onDatePicked({action, year, month, day}) {
@@ -204,7 +208,6 @@ class DatePicker extends Component {
       this.setState({
         date: new Date(year, month, day)
       });
-      this.datePicked();
     } else {
       this.onPressCancel();
     }
@@ -215,7 +218,6 @@ class DatePicker extends Component {
       this.setState({
         date: Moment().hour(hour).minute(minute).toDate()
       });
-      this.datePicked();
     } else {
       this.onPressCancel();
     }
@@ -243,7 +245,6 @@ class DatePicker extends Component {
       this.setState({
         date: new Date(year, month, day, hour, minute)
       });
-      this.datePicked();
     } else {
       this.onPressCancel();
     }
